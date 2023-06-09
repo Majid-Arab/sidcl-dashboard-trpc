@@ -1,0 +1,320 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model adonis_schema {
+  id             Int       @id @default(autoincrement())
+  name           String    @db.VarChar(255)
+  batch          Int
+  migration_time DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model adonis_schema_versions {
+  version Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model agreement {
+  id         Int       @default(autoincrement())
+  cname      String?   @db.VarChar(150)
+  pname      String?   @db.VarChar(150)
+  remark     String?   @db.VarChar(150)
+  file_name  String?   @db.VarChar(150)
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  image_id   String?   @db.VarChar(250)
+  picture    String?
+  years      String?   @db.VarChar(50)
+
+  @@ignore
+}
+
+model book_cat {
+  bname String @unique(map: "book_cat_id_key") @db.VarChar(100)
+  id    Int    @id @default(autoincrement())
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model certificate {
+  id         Int       @default(autoincrement())
+  cname      String?   @db.VarChar(150)
+  pname      String?   @db.VarChar(150)
+  remark     String?   @db.VarChar(150)
+  file_name  String?   @db.VarChar(150)
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  picture    String?
+  image_id   String?   @db.VarChar(250)
+
+  @@ignore
+}
+
+model emp_department {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique(map: "unique_department") @db.VarChar(100)
+  employee_info employee_info[]
+}
+
+model emp_designation {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique(map: "unique_designation") @db.VarChar(100)
+  employee_info employee_info[]
+}
+
+model employee_info {
+  id                 Int             @id(map: "employee_info_key_primary") @default(autoincrement())
+  code               String          @unique(map: "emp_info_key_unique") @db.VarChar(50)
+  name               String          @db.VarChar(50)
+  cnic               BigInt          @unique(map: "emp_info_cnic_ukey")
+  emp_department_id  Int
+  emp_designation_id Int
+  address            String          @db.VarChar(250)
+  email              String          @db.VarChar(100)
+  contact            BigInt          @unique(map: "emp_info_phone_ukey")
+  date_of_joining    DateTime        @db.Timestamptz(6)
+  picture            String?         @db.VarChar(250)
+  image_id           String?         @db.VarChar(250)
+  file_id            String?         @db.VarChar(250)
+  file_url           String?         @db.VarChar(250)
+  image_name         String?         @db.VarChar(250)
+  file_name          String?         @db.VarChar(250)
+  emp_department     emp_department  @relation(fields: [emp_department_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "department_fkey")
+  emp_designation    emp_designation @relation(fields: [emp_designation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "designation_fkey")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model Renamedexport {
+  id   Int     @default(autoincrement())
+  name String? @db.VarChar(100)
+
+  @@map("export")
+  @@ignore
+}
+
+model feasibility_cat {
+  id       Int    @id(map: "feasi_cat_pkey") @default(autoincrement())
+  category String @unique(map: "feasibility_cat_id_ukey")
+}
+
+model huawei {
+  id        Int       @id
+  cname     String?   @db.VarChar(150)
+  pname     String?   @db.VarChar(150)
+  po        String?   @db.VarChar(150)
+  po_date   DateTime? @db.Date
+  desc      String?
+  siteid    String?   @db.VarChar(150)
+  pcode     String?   @db.VarChar(150)
+  file_name String?   @db.VarChar(150)
+  dueqty    Decimal?  @db.Decimal(100, 0)
+}
+
+model invoice {
+  id        Int       @id @default(autoincrement())
+  cname     String?   @db.VarChar(150)
+  pname     String?   @db.VarChar(150)
+  inv_num   String?   @db.VarChar(150)
+  inv_date  DateTime? @db.Date
+  remarks   String?   @db.VarChar(150)
+  file_name String?   @db.VarChar(150)
+  picture   String?
+  image_id  String?   @db.VarChar
+  po        String?   @db.VarChar(150)
+  sinv_num  String?   @db.VarChar(150)
+}
+
+model po_num {
+  id              Int           @id @default(autoincrement())
+  po_num          String?       @unique(map: "po_num_ukey") @db.VarChar(50)
+  client_id       Int?
+  project_name_id Int?
+  client          client?       @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_fkey")
+  project_name    project_name? @relation(fields: [project_name_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_name_fkey")
+  site_info       site_info[]
+}
+
+model project_cat {
+  id   Int    @id @default(autoincrement())
+  name String @unique(map: "project_cat_ukey") @db.VarChar(50)
+}
+
+model proposal_category {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique(map: "unique_cattegory") @db.VarChar(50)
+  feasibility_reports feasibility_reports[]
+  projects_info       projects_info[]
+  proposal_info       proposal_info[]
+}
+
+model proposal_info {
+  id                  Int                   @id @default(autoincrement())
+  proposal_name       String                @unique(map: "unique_proposal_name")
+  client_id           Int?
+  proposal_cat_id     Int
+  dos                 DateTime              @db.Timestamptz(6)
+  description         String?
+  year                Int?
+  submission_status   String?               @db.VarChar(255)
+  picture             String?
+  type                String?               @db.VarChar(25)
+  team                String?               @db.VarChar(25)
+  image_id            String?               @db.VarChar(250)
+  file_id             String?               @db.VarChar(250)
+  file_url            String?               @db.VarChar(250)
+  image_name          String?               @db.VarChar(250)
+  file_name           String?               @db.VarChar(250)
+  feasibility_reports feasibility_reports[]
+  projects_info       projects_info[]
+  proposal_category   proposal_category     @relation(fields: [proposal_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "proposal_cat_fkey")
+}
+
+model reports {
+  cname     String? @db.VarChar(150)
+  pname     String? @db.VarChar(150)
+  year      String? @db.VarChar(150)
+  remark    String? @db.VarChar(225)
+  file_name String? @db.VarChar(150)
+  image_id  String? @db.VarChar(225)
+  picture   String?
+  id        Int     @id @default(autoincrement())
+}
+
+model site_info {
+  id                Int              @id(map: "site_info_id") @default(autoincrement())
+  site_id           String           @unique(map: "site_id_ukey") @db.VarChar(50)
+  client_id         Int
+  project_name_id   Int
+  surveyour_name    String?          @db.VarChar(50)
+  date              DateTime?        @db.Timestamptz(6)
+  description       String?
+  po_num_id         Int?
+  invoice_status_id Int?
+  remarks           String?
+  file_url          String?          @db.VarChar(250)
+  file_id           String?          @db.VarChar(250)
+  file_name         String?          @db.VarChar(250)
+  client            client           @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_id")
+  invoice_status    invoice_status?  @relation(fields: [invoice_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "invoice_status_id")
+  po_num            po_num?          @relation(fields: [po_num_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "po_num_id")
+  project_name      project_name     @relation(fields: [project_name_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_name_id")
+  site_info_files   site_info_files?
+}
+
+model books {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique(map: "books_code_ukey") @db.VarChar(100)
+  name        String  @db.VarChar(250)
+  author      String? @db.VarChar(100)
+  book_cat_id Int
+  remark      String? @db.VarChar(250)
+  picture     String?
+  image_id    String? @db.VarChar(250)
+  file_id     String? @db.VarChar(250)
+  file_url    String? @db.VarChar(250)
+  image_name  String? @db.VarChar(250)
+  file_name   String? @db.VarChar(250)
+}
+
+model client {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique(map: "clientname")
+  po_num       po_num[]
+  project_name project_name[]
+  site_info    site_info[]
+}
+
+model employee_info2 {
+  code               Int      @unique(map: "emp_info_ukey")
+  name               String   @db.VarChar(100)
+  date_of_joining    DateTime @db.Timestamptz(6)
+  cnic               BigInt
+  emp_designation_id Int
+  emp_department_id  Int
+  contact            BigInt
+  address            String   @db.VarChar(100)
+  email              String   @db.VarChar(100)
+  id                 Int      @id(map: "employee_info_pkey")
+}
+
+model feasibility_reports {
+  id                Int               @id(map: "feasibility_info_pkey") @unique(map: "feasibility_report_ukey") @default(autoincrement())
+  project_id        Int
+  client_id         Int
+  dos               DateTime          @db.Timestamptz(6)
+  proposal_cat_id   Int
+  description       String?
+  picture           String?
+  image_id          String?           @db.VarChar(250)
+  file_id           String?           @db.VarChar(250)
+  file_url          String?           @db.VarChar(250)
+  file_name         String?           @db.VarChar(250)
+  image_name        String?           @db.VarChar(250)
+  proposal_clients  proposal_clients  @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_fkey")
+  proposal_info     proposal_info     @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_fkey")
+  proposal_category proposal_category @relation(fields: [proposal_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "proposal_fkey")
+}
+
+model invoice_status {
+  id             Int         @id @default(autoincrement())
+  invoice_status String?     @unique(map: "invoice_status_ukey") @db.VarChar(50)
+  site_info      site_info[]
+}
+
+model project_name {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique(map: "projectname")
+  client_id Int
+  po_num    po_num[]
+  client    client      @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_id")
+  site_info site_info[]
+}
+
+model projects_info {
+  id                Int               @id @default(autoincrement())
+  project_id        Int
+  client_id         Int
+  dos               DateTime          @db.Timestamptz(6)
+  project_cat_id    Int
+  description       String?
+  picture           String?
+  image_id          String?           @db.VarChar(250)
+  file_id           String?           @db.VarChar(250)
+  file_url          String?           @db.VarChar(250)
+  image_name        String?           @db.VarChar(250)
+  file_name         String?           @db.VarChar(250)
+  proposal_clients  proposal_clients  @relation(fields: [client_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_fkey")
+  proposal_info     proposal_info     @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_fkey")
+  proposal_category proposal_category @relation(fields: [project_cat_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "proposal_fkey")
+}
+
+model proposal_clients {
+  id                  Int                   @id(map: "proposal-clients_pkey") @default(autoincrement())
+  name                String                @db.VarChar(100)
+  feasibility_reports feasibility_reports[]
+  projects_info       projects_info[]
+}
+
+model site_info_files {
+  id         Int       @id @default(autoincrement())
+  site_id    Int
+  file_id    String    @unique(map: "file_id_ukey") @db.VarChar(250)
+  filr_url   String?   @unique(map: "file_url_ukey") @db.VarChar(250)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  site_info  site_info @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "site_info_id")
+}
